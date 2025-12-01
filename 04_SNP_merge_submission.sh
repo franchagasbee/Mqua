@@ -1,0 +1,14 @@
+#!/bin/bash
+
+SPECIES=$1
+REF=$2
+PROJECTFOLDER=$3
+CPUs=$4
+
+cd $PROJECTFOLDER
+INPUTFOLDER="$PROJECTFOLDER/snps.filtered"
+OUTPUTFOLDER="$PROJECTFOLDER/snps.merged"
+mkdir -p $OUTPUTFOLDER
+REGIONS="$PROJECTFOLDER/regions.lst"
+qsub -pe smp $CPUs -q fast.q,large.q,small.q,medium.q -v "REGIONS=$REGIONS" -v "SPECIES=$SPECIES" -v "INPUTFOLDER=$INPUTFOLDER" -v "OUTPUTFOLDER=$OUTPUTFOLDER" ~/shells/mapSNP/2025_07_09_SNP_merge.sh
+

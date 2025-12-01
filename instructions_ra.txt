@@ -1,0 +1,50 @@
+The samplelist.txt is what you give it as the $SAMPLELIST argument, it's supposed to be a list of base sample names. The script then assumes that your filtered files are named ${SAMPLE}_1.filtered.fq.gz/${SAMPLE}_2.filtered.fq.gz 
+
+So, for example, if my reads are called LK_Cm1_1.filtered.fq.gz and LK_Cm1_2.filtered.fq.gz, then the sample name on the sample list should be LK_Cm1
+
+If your reads are named differently (like LK_Cm1.R1.fq.gz) then you need to change the path accordingly in the script, before it passes it to the job
+
+
+For the repeat annotation stuff, here is the instruction page from our github: https://github.com/LIB-insect-comparative-genomics/bigfoot/blob/main/RA_installation.md
+
+In the EarlGrey installation part at the very end, you don't need to change the scripts anymore, since the software has been updated
+There's also some changes in the RepeatModeler configuration steps, I will look through them tomorrow and send you an updated version
+
+> Lisa:
+📎 configure_dfam39.sh
+
+> Fran:
+ok. this is regarding the instalation of RepeatMasker?
+
+> Lisa:
+It's about configuring the RepeatMasker that gets installed when you install EarlGrey via conda
+You can run the EarlGrey and other repeat tools (so repeats 01-03) in parallel, then once they're all finished you can run the fourth script to merge them together into one bed file
+
+> Lisa:
+If Eckart has run all the repeat annotation steps but not the merge one (check if there's a ....repetitive.bed.gz file in the directory), then you have to run the merge script. It can be a bit tricky, because the paths to the individual files are hard-coded in the script, so you might have to change it a little bit
+
+> Lisa:
+Next steps would be to run a SNP call/SNP filter/merge the by-region VCFs, if you haven't done this already, and then use the ...repetitive.bed.gz file to filter out the repetitive regions from your VCF file
+sh
+
+VCFstats.sh
+6.1KB
+Hi Fran! I'm so sorry, I completely forgot to send this to you yesterday!
+The variables you pass to it should be: SPECIES=Genus.species OUTPUTDIR=/full/path/to/outputdir REF=/full/path/to/referencegenome.fa VCF=/full/path/to/vcf.missingdatafilter PHASINGDIR=/full/path/to/phasingdir (where you want it to put the phased vcf)
+
+install
+NGsRelate
+module load htslib/1.19.1
+
+cd ~/progz
+git clone --recurse-submodules https://github.com/samtools/htslib.git
+cd htslib;make -j10
+cd ~/progz
+git clone https://github.com/ANGSD/ngsRelate
+cd ngsRelate
+make HTSSRC=/home/estolle/progz/htslib
+ln -s $PWD/ngsRelate ~/bin
+GitHub
+GitHub - samtools/htslib: C library for high-throughput sequencing data formats
+
+C library for high-throughput sequencing data formats - samtools/htslib
